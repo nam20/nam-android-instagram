@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "947285254163",
+    "firebase_url": "https://naminsta-98012.firebaseio.com",
+    "project_id": "naminsta-98012",
+    "storage_bucket": "naminsta-98012.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947285254163:android:864c2bc1ae5acda25e5fe6",
+        "android_client_info": {
+          "package_name": "com.example.naminsta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947285254163-7c8uq8hogms4fpb0t0rclpqcdjkvis58.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.naminsta",
+            "certificate_hash": "bfb2d9a99093e7469c3ded0f746f77206b1d976a"
+          }
+        },
+        {
+          "client_id": "947285254163-gjnduvtm1tmel1fe789kf7p66sj92njb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy-TwMntndLUw025dT8Ro7J1eqzECbY6s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947285254163-gjnduvtm1tmel1fe789kf7p66sj92njb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
