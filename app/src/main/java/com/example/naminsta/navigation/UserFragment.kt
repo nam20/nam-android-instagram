@@ -17,8 +17,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.naminsta.LoginActivity
 import com.example.naminsta.MainActivity
 import com.example.naminsta.R
+import com.example.naminsta.navigation.model.AlarmDTO
 import com.example.naminsta.navigation.model.ContentDTO
 import com.example.naminsta.navigation.model.FollowDTO
+import com.example.naminsta.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
@@ -119,16 +121,15 @@ class UserFragment : Fragment() {
                 transaction.set(tsDocFollowing, followDTO)
                 return@runTransaction
             }
-            println(followDTO.followings )
-            println(uid)
+
             if(followDTO.followings.containsKey(uid)){
                 // it remove following third person when a third person follow me
-                println("remove")
+
                 followDTO?.followingCount = followDTO?.followingCount - 1
                 followDTO?.followings?.remove(uid)
             }else{
                 // it add following third person when a third person do not follow me
-                println("add")
+
                 followDTO?.followingCount = followDTO?.followingCount + 1
                 followDTO?.followings[uid!!] = true
             }
@@ -145,6 +146,7 @@ class UserFragment : Fragment() {
                 followDTO = FollowDTO()
                 followDTO!!.followerCount = 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
 
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
@@ -152,22 +154,33 @@ class UserFragment : Fragment() {
 
             if(followDTO!!.followers.containsKey(currentUserUid)){
                 // it cancel mt follower when i follow a third person
-                println("removefollower")
+
                 followDTO!!.followerCount = followDTO!!.followerCount - 1
                 followDTO!!.followers.remove(currentUserUid!!)
             }else{
                 // it add my follower when i don't follow a third person
-                println("addfollower")
+
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
-
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
-
         }
     }
 
+    fun followerAlarm(destinationUid : String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser?.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp = System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = auth?.currentUser?.email + " " + getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid, "naminsta", message)
+    }
     fun getProfileImage(){
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if(documentSnapshot == null) return@addSnapshotListener
